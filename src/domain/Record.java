@@ -9,7 +9,6 @@ public class Record implements Row<Item>, Cloneable {
 
     private int HASH_CONST = 17;
 
-
     private int position;
     private boolean deleteTag;
     private int quantity;
@@ -65,7 +64,7 @@ public class Record implements Row<Item>, Cloneable {
 
     @Override
     public List<Item> getItemList() {
-        return new ArrayList<>();
+        return itemList;
     }
 
     @Override

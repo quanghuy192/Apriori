@@ -24,7 +24,7 @@ public class AprioriFindItemsChild_Thread extends Thread {
         this.apriAction = apriAction;
         this.id = id;
 
-        List<Row> data = new ArrayList<Row>();
+        List<Row> data = new ArrayList<>();
         int start = (int) id * (dataItemsParent.size() / MULTI_THREAD);
         int end = (int) (id + 1) * (dataItemsParent.size() / MULTI_THREAD);
         if (id == MULTI_THREAD - 1) {

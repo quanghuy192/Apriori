@@ -3,6 +3,7 @@ import domain.Item;
 import domain.Record;
 import domain.Row;
 
+import java.io.*;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -10,53 +11,44 @@ public class Test {
 
     public static void main(String[] args) {
 
-        double SUPPORT_MIN = 2;      // min = 2
-        double CONFIDENCE_MIN = 0.8;  // 80%
+        double support_min = 0.0;
+        double confidence_min = 0.0;
 
         List<Row> rawData = new ArrayList<>();
+        try {
+            FileReader fileReader = new FileReader(new File("data"));
+            BufferedReader bufferedReader = new BufferedReader(fileReader);
 
-        MyItem m1 = new MyItem("A");
-        MyItem m2 = new MyItem("C");
-        MyItem m3 = new MyItem("D");
-        List<Item> l1 = new ArrayList<>();
-        l1.add(m1);
-        l1.add(m2);
-        l1.add(m3);
-        Row r1 = new Record(l1);
+            String line;
+            int count = 0;
+            while ((line = bufferedReader.readLine()) != null) {
+                String[] values = line.split(" ");
 
-        MyItem n1 = new MyItem("B");
-        MyItem n2 = new MyItem("C");
-        MyItem n3 = new MyItem("E");
-        List<Item> l2 = new ArrayList<>();
-        l2.add(n1);
-        l2.add(n2);
-        l2.add(n3);
-        Row r2 = new Record(l2);
 
-        MyItem p1 = new MyItem("A");
-        MyItem p2 = new MyItem("B");
-        MyItem p3 = new MyItem("C");
-        MyItem p4 = new MyItem("E");
-        List<Item> l3 = new ArrayList<>();
-        l3.add(p1);
-        l3.add(p2);
-        l3.add(p3);
-        l3.add(p4);
-        Row r3 = new Record(l3);
+                // Line 1 get support_min & confidence_min
+                if (count == 0) {
+                    support_min = Double.parseDouble(values[0]);
+                    confidence_min = Double.parseDouble(values[1]);
+                } else {
+                    // Read data
+                    List<Item> l = new ArrayList<>();
+                    for (String s : values) {
+                        MyItem m = new MyItem(s);
+                        l.add(m);
+                    }
+                    Row r = new Record(l);
+                    rawData.add(r);
+                }
 
-        MyItem q1 = new MyItem("B");
-        MyItem q2 = new MyItem("E");
-        List<Item> l4 = new ArrayList<>();
-        l4.add(q1);
-        l4.add(q2);
-        Row r4 = new Record(l4);
+                count++;
+            }
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
-        rawData.add(r1);
-        rawData.add(r2);
-        rawData.add(r3);
-        rawData.add(r4);
-
-        new AprioriBase(SUPPORT_MIN, CONFIDENCE_MIN, rawData);
+        new AprioriBase(support_min, confidence_min, rawData);
     }
 
 }

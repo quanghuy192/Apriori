@@ -41,7 +41,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
             } else {
                 size = dataOriginalItems.size();
 
-                // Run with multil thread
+                // Run with multi thread
                 for (int j = 0; i < AprioriFindingSubChild_Thread.MULTI_THREAD; i++) {
                     AprioriFindingSubChild_Thread thread = new AprioriFindingSubChild_Thread(this, j, resultFilter);
                     thread.start();
@@ -75,8 +75,8 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                 dataItemsChild = new ArrayList<>();
 
                 // Run with multi thread
-                for (int k = 0; i < AprioriFindItemsChild_Thread.MULTI_THREAD; i++) {
-                    AprioriFindItemsChild_Thread thread = new AprioriFindItemsChild_Thread(this, i, dataResultItems);
+                for (int k = 0; k < AprioriFindItemsChild_Thread.MULTI_THREAD; k++) {
+                    AprioriFindItemsChild_Thread thread = new AprioriFindItemsChild_Thread(this, k, dataResultItems);
                     thread.start();
                     try {
                         thread.join();
@@ -95,7 +95,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                     System.out.println("----------------------------------------");
                     System.out.println("----------------------------------------");
                 } else {
-                    System.out.println("Count : " + dataResultItemsClone.size() + " items");
+//                    System.out.println("Count : " + dataResultItemsClone.size() + " items");
                 }
             }
         }
@@ -120,10 +120,10 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
 
     private Item getItem(List<Item> child, List<Item> items) {
         for (Item i : items) {
-            Item temp = new Item(child);
-            if (i.equals(temp)) {
-                return i;
-            }
+//            Item temp = new Item(child);
+//            if (i.equals(temp)) {
+//                return i;
+//            }
         }
         return null;
     }
@@ -153,21 +153,21 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                     break;
                 }
 
-                Item i = new Item(parent.getItemList(), child.getItemList());
-                if (!itemsRuleLocal.contains(i)) {
-                    i.setItemsParent(parent.getItemList());
-                    itemsRuleLocal.add(i);
-                    count++;
-                } else {
-                    Item clone = getItem(child.getItemList(), itemsRuleLocal);
-                    if (null != clone) {
-                        clone.setItemsParent(parent.getItemList());
-                    }
-                }
-
-                if (count == parent.getItemList().size()) {
-                    parent.setDeleteTag(true);
-                }
+//                Item i = new Item(parent.getItemList(), child.getItemList());
+//                if (!itemsRuleLocal.contains(i)) {
+////                    i.setItemsParent(parent.getItemList());
+//                    itemsRuleLocal.add(i);
+//                    count++;
+//                } else {
+//                    Item clone = getItem(child.getItemList(), itemsRuleLocal);
+//                    if (null != clone) {
+////                        clone.setItemsParent(parent.getItemList());
+//                    }
+//                }
+//
+//                if (count == parent.getItemList().size()) {
+//                    parent.setDeleteTag(true);
+//                }
             }
         }
 
