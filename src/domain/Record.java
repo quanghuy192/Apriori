@@ -14,8 +14,8 @@ public class Record implements Row<Item>, Cloneable {
     private int quantity;
 
     private List<Item> itemList;
-    private List<Item> itemsParent;
-    private List<Item> itemsChild;
+    private List<Item> parent;
+    private List<Item> child;
 
     private Utils utils = new Utils();
 
@@ -33,10 +33,10 @@ public class Record implements Row<Item>, Cloneable {
         deleteTag = false;
     }
 
-    public Record(List<Item> itemsParent, List<Item> itemsChild) {
+    public Record(List<Item> parent, List<Item> child) {
         super();
-        this.itemsParent = itemsParent;
-        this.itemsChild = itemsChild;
+        this.parent = parent;
+        this.child = child;
         deleteTag = false;
         quantity = 0;
     }
@@ -45,16 +45,16 @@ public class Record implements Row<Item>, Cloneable {
         return quantity;
     }
 
-    public void setItemsParent(List<Item> itemsParent) {
-        this.itemsParent = itemsParent;
+    public void setItemsParent(List<Item> parent) {
+        this.parent = parent;
 
-        if (utils.checkSubArrayContain(itemsParent, itemsChild)) {
+        if (utils.checkSubArrayContain(parent, child)) {
             quantity++;
         }
     }
 
     public List<Item> getItemsChild() {
-        return itemsChild;
+        return child;
     }
 
     @Override
@@ -64,7 +64,7 @@ public class Record implements Row<Item>, Cloneable {
 
     @Override
     public List<Item> getItemList() {
-        return itemList;
+        return child;
     }
 
     @Override
@@ -114,7 +114,7 @@ public class Record implements Row<Item>, Cloneable {
     }
 
     @Override
-    public Record clone() throws CloneNotSupportedException {
+    public Record clone() {
 
         // Deep clone
         List<Item> list = new ArrayList<>();

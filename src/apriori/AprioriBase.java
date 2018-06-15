@@ -17,7 +17,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
 
     private List<Row> dataResultItems, resultFilter;
     private List<Row> dataOriginalItems;
-    private volatile List<Item> itemsRule;
+    private volatile List<Record> itemsRule;
     private volatile List<Row> dataItemsChild;
     private Utils utils = new Utils();
 
@@ -42,7 +42,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                 size = dataOriginalItems.size();
 
                 // Run with multi thread
-                for (int j = 0; i < AprioriFindingSubChild_Thread.MULTI_THREAD; i++) {
+                for (int j = 0; j < AprioriFindingSubChild_Thread.MULTI_THREAD; j++) {
                     AprioriFindingSubChild_Thread thread = new AprioriFindingSubChild_Thread(this, j, resultFilter);
                     thread.start();
                     try {
@@ -57,7 +57,8 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                 // make clone from result data
                 List<Row> dataResultItemsClone = cloneArray(dataResultItems);
                 dataResultItems.clear();
-                for (Item h : itemsRule) {
+
+                for (Record h : itemsRule) {
                     double percent = 1.0 * h.getQuantity() / size;
                     List<Item> subList;
                     if (percent >= supportMin) {
@@ -95,7 +96,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                     System.out.println("----------------------------------------");
                     System.out.println("----------------------------------------");
                 } else {
-//                    System.out.println("Count : " + dataResultItemsClone.size() + " items");
+                    System.out.println("Count : " + dataResultItemsClone.size() + " items");
                 }
             }
         }
@@ -118,12 +119,12 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
         return utils.pruneDuplicateItem(itemList);
     }
 
-    private Item getItem(List<Item> child, List<Item> items) {
-        for (Item i : items) {
-//            Item temp = new Item(child);
-//            if (i.equals(temp)) {
-//                return i;
-//            }
+    private Record getRecord(List<Item> child, List<Record> records) {
+        for (Record i : records) {
+            Record temp = new Record(child);
+            if (i.equals(temp)) {
+                return i;
+            }
         }
         return null;
     }
@@ -131,11 +132,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
     private List<Row> cloneArray(List<Row> resultItems) {
         List<Row> dataResultItemsClone = new ArrayList<>();
         for (Row c : resultItems) {
-            try {
-                dataResultItemsClone.add(((Record) c).clone());
-            } catch (CloneNotSupportedException e) {
-                e.printStackTrace();
-            }
+            dataResultItemsClone.add(((Record) c).clone());
         }
         return dataResultItemsClone;
     }
@@ -143,7 +140,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
     @Override
     public void findSubChild(List<Row> dataItemsParent) {
 
-        List<Item> itemsRuleLocal = new ArrayList<>();
+        List<Record> itemsRuleLocal = new ArrayList<>();
 
         for (Row parent : dataOriginalItems) {
             for (Row child : dataItemsParent) {
@@ -153,21 +150,21 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                     break;
                 }
 
-//                Item i = new Item(parent.getItemList(), child.getItemList());
-//                if (!itemsRuleLocal.contains(i)) {
-////                    i.setItemsParent(parent.getItemList());
-//                    itemsRuleLocal.add(i);
-//                    count++;
-//                } else {
-//                    Item clone = getItem(child.getItemList(), itemsRuleLocal);
-//                    if (null != clone) {
-////                        clone.setItemsParent(parent.getItemList());
-//                    }
-//                }
-//
-//                if (count == parent.getItemList().size()) {
-//                    parent.setDeleteTag(true);
-//                }
+                Record i = new Record(parent.getItemList(), child.getItemList());
+                if (!itemsRuleLocal.contains(i)) {
+                    i.setItemsParent(parent.getItemList());
+                    itemsRuleLocal.add(i);
+                    count++;
+                } else {
+                    Record clone = getRecord(child.getItemList(), itemsRuleLocal);
+                    if (null != clone) {
+                        clone.setItemsParent(parent.getItemList());
+                    }
+                }
+
+                if (count == parent.getItemList().size()) {
+                    parent.setDeleteTag(true);
+                }
             }
         }
 
