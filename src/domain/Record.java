@@ -15,7 +15,6 @@ public class Record implements Row<Item>, Cloneable {
 
     private List<Item> itemList;
     private List<Item> parent;
-    private List<Item> child;
 
     private Utils utils = new Utils();
 
@@ -36,9 +35,13 @@ public class Record implements Row<Item>, Cloneable {
     public Record(List<Item> parent, List<Item> child) {
         super();
         this.parent = parent;
-        this.child = child;
+        this.itemList = child;
         deleteTag = false;
         quantity = 0;
+    }
+
+    public void setQuantity(int quantity) {
+        this.quantity = quantity;
     }
 
     public int getQuantity() {
@@ -48,23 +51,19 @@ public class Record implements Row<Item>, Cloneable {
     public void setItemsParent(List<Item> parent) {
         this.parent = parent;
 
-        if (utils.checkSubArrayContain(parent, child)) {
+        if (utils.checkSubArrayContain(parent, itemList)) {
             quantity++;
         }
     }
 
-    public List<Item> getItemsChild() {
-        return child;
-    }
-
     @Override
     public void setItemList(List<Item> values) {
-
+        this.itemList = values;
     }
 
     @Override
     public List<Item> getItemList() {
-        return child;
+        return itemList;
     }
 
     @Override
@@ -96,16 +95,16 @@ public class Record implements Row<Item>, Cloneable {
         if (o == this) {
             return true;
         }
-        if (!(o instanceof Item)) {
+        if (!(o instanceof Record)) {
             return false;
         }
 
         Record i = (Record) o;
-        if (i.getItemsChild().size() != getItemList().size()) {
+        if (i.getItemList().size() != getItemList().size()) {
             return false;
         }
 
-        for (Item s : i.getItemsChild()) {
+        for (Item s : i.getItemList()) {
             if (!getItemList().contains(s)) {
                 return false;
             }

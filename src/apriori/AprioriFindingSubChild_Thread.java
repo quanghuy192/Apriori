@@ -16,7 +16,7 @@ public class AprioriFindingSubChild_Thread extends Thread {
 
     private long id;
     private List<Row> dataItemsParent;
-    public static int MULTI_THREAD = 200;
+    public static int MULTI_THREAD = 1;
 
     public AprioriFindingSubChild_Thread(AprioriFindingSubChild apriAction, long id, List<Row> dataItemsParent) {
         super();

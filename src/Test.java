@@ -1,5 +1,6 @@
 import apriori.AprioriBase;
 import domain.Item;
+import domain.MyItem;
 import domain.Record;
 import domain.Row;
 

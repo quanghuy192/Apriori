@@ -1,6 +1,7 @@
 package apriori;
 
 import domain.Item;
+import domain.MyItem;
 import domain.Record;
 import domain.Row;
 import util.Utils;
@@ -26,6 +27,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
         this.confidenceMin = confidenceMin;
         this.dataOriginalItems = rawData;
         this.resultFilter = rawData;
+        dataResultItems = new ArrayList<>();
 
         execute();
     }
@@ -59,11 +61,11 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                 dataResultItems.clear();
 
                 for (Record h : itemsRule) {
-                    double percent = 1.0 * h.getQuantity() / size;
+                    double percent = 1.0 * h.getQuantity();
                     List<Item> subList;
                     if (percent >= supportMin) {
-                        subList = h.getItemsChild();
-                        Row com = new Record(count, subList);
+                        subList = h.getItemList();
+                        Record com = new Record(count, subList);
                         dataResultItems.add(com);
                         count++;
                     }
@@ -86,10 +88,13 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                     }
                 }
 
+                resultFilter = cloneArray(dataItemsChild);
+
                 if (dataItemsChild.size() > 1) {
                     // show(dataItemsChild);
                     System.out.println("Support min = " + supportMin);
-                    System.out.println("Count : " + dataItemsChild.size() + " items");
+                    System.out.println("Count : " + dataItemsChild.size() + " items \n");
+                    show(dataItemsChild);
                     System.out.println("----------------------------------------");
                     System.out.println("----------------------------------------");
                     System.out.println("----------------------------------------");
@@ -97,16 +102,33 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                     System.out.println("----------------------------------------");
                 } else {
                     System.out.println("Count : " + dataResultItemsClone.size() + " items");
+                    show(dataResultItemsClone);
+                    System.out.print("------------------THE END----------------------");
+                    break;
                 }
             }
+        }
+    }
+
+    private void show(List<Row> results){
+        for (Row r : results) {
+            for (Object o : r.getItemList()) {
+                System.out.print("\t" + ((MyItem) o).getNameItem());
+            }
+            System.out.print("  --  quantity: " + ((Record) r).getQuantity());
+            System.out.println("\n");
         }
     }
 
     private List<Row> filterFirstTime(List<Row> dataItemsParent) {
         List<Row> itemsFirst = new ArrayList<>();
         List<Item> atomItems = getChildItem(dataItemsParent);
-        Row row = new Record(atomItems);
-        itemsFirst.add(row);
+        for (Item i : atomItems) {
+            List<Item> lRow = new ArrayList<>();
+            lRow.add(i);
+            Row row = new Record(lRow);
+            itemsFirst.add(row);
+        }
         return itemsFirst;
     }
 
@@ -141,6 +163,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
     public void findSubChild(List<Row> dataItemsParent) {
 
         List<Record> itemsRuleLocal = new ArrayList<>();
+        itemsRule.clear();
 
         for (Row parent : dataOriginalItems) {
             for (Row child : dataItemsParent) {

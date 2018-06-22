@@ -1,5 +1,4 @@
-import domain.Item;
-import domain.Record;
+package domain;
 
 public class MyItem implements Item {
 
