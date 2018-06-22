@@ -101,7 +101,7 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
                     System.out.println("----------------------------------------");
                     System.out.println("----------------------------------------");
                 } else {
-                    System.out.println("Count : " + dataResultItemsClone.size() + " items");
+                    System.out.println("Count : " + dataResultItemsClone.size() + " items\n");
                     show(dataResultItemsClone);
                     System.out.print("------------------THE END----------------------");
                     break;
@@ -115,7 +115,6 @@ public class AprioriBase implements Apriori<Row>, AprioriFindingSubChild_Thread.
             for (Object o : r.getItemList()) {
                 System.out.print("\t" + ((MyItem) o).getNameItem());
             }
-            System.out.print("  --  quantity: " + ((Record) r).getQuantity());
             System.out.println("\n");
         }
     }
